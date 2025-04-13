@@ -9,7 +9,7 @@
         state: latest
       when: ansible_distribution == "Debian"
 
-    - name: updating repos (Debian)
+    - name: update repos (Debian)
       ansible.builtin.apt:
         update_cache: yes
       when: ansible_distribution == "Debian"
@@ -26,28 +26,28 @@
         state: latest
       when: ansible_distribution == "Debian"
 
-    - name: install postgresql repo (AlmaLinux)
+    - name: install postgresql repo (AlmaLinux, CentOS)
       ansible.builtin.dnf:
         name:
           - sudo
           - 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm'
         state: latest
         disable_gpg_check: true
-      when: ansible_distribution == "AlmaLinux"
+      when: ansible_distribution == "AlmaLinux" or ansible_distribution == "CentOS"
 
-    - name: updating repos (AlmaLinux)
+    - name: update repos (AlmaLinux, CentOS)
       ansible.builtin.dnf:
         update_cache: yes
-      when: ansible_distribution == "AlmaLinux"
+      when: ansible_distribution == "AlmaLinux" or ansible_distribution == "CentOS"
 
-    - name: install postgresql (AlmaLinux)
+    - name: install postgresql (AlmaLinux, CentOS)
       ansible.builtin.dnf:
         name:
           - postgresql17
           - postgresql17-server
           - postgresql17-contrib
         state: latest
-      when: ansible_distribution == "AlmaLinux"
+      when: ansible_distribution == "AlmaLinux" or ansible_distribution == "CentOS"
 
     - name: run post-install postgresql tweaks
       ansible.builtin.script:

@@ -2,7 +2,9 @@
 
 echo "Running post-install PostgreSQL tweaks..."
 
-if [[ $(cat /etc/os-release | grep -w "NAME")  == *"AlmaLinux"* ]]
+distro=$(cat /etc/os-release | grep -w "NAME")
+
+if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
 then
     /usr/pgsql-17/bin/postgresql-17-setup initdb
     echo "Enabling PostgreSQL..."
@@ -26,12 +28,12 @@ sudo -u postgres psql -h localhost -U postgres -c "CREATE DATABASE data OWNER st
 
 echo "Restricting user student to only connect from second ip..."
 
-if [[ $(cat /etc/os-release | grep -w "NAME")  == *"AlmaLinux"* ]]
+if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
 then
 
     echo "Creating backups of default files..."
-    cp /var/lib/pgsql/data/pg_hba.conf /var/lib/pgsql/17/data/pg_hba.conf.bak
-    cp /var/lib/pgsql/data/postgresql.conf /var/lib/pgsql/17/data/postgresql.conf.bak
+    cp /var/lib/pgsql/17/data/pg_hba.conf /var/lib/pgsql/17/data/pg_hba.conf.bak
+    cp /var/lib/pgsql/17/data/postgresql.conf /var/lib/pgsql/17/data/postgresql.conf.bak
 
     echo "Allowing student user access only from second host's ip..."
     printf "host\t\tdata\tstudent\t\t%s\t\tscram-sha-256\n" "$1" >> /var/lib/pgsql/17/data/pg_hba.conf
@@ -53,9 +55,24 @@ else
     printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /etc/postgresql/17/main/pg_hba.conf
 fi
 
-
-sudo -u postgres psql -h localhost -U postgres -d data -c 'SELECT 1;'
-
+if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
+then
+    echo "Restarting PostgreSQL..."
+    if systemctl restart postgresql-17
+    then
+        sudo -u postgres psql -h localhost -U postgres -d data -c 'SELECT 1;'
+    else
+        echo "Could not restart PostgreSQL"
+    fi
+else
+    echo "Restarting PostgreSQL..."
+    if systemctl restart postgresql
+    then
+        sudo -u postgres psql -h localhost -U postgres -d data -c 'SELECT 1;'
+    else
+        echo "Could not restart PostgreSQL"
+    fi
+fi
 
 echo "Post install tweaks finished."
 
