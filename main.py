@@ -40,7 +40,7 @@ def install_postgres(other_host):
     print("Installing and configuring PostgreSQL for target host...")
 
     # This regex was NOT created by me, I found this on the Internet, checked on RegExr for different inputs, verified that it works and used it for this script
-    pattern = re.compile("(\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b)")
+    pattern = re.compile("(\\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b)")
 
     if pattern.match(other_host):
         print("Provided IP address, adding mask...")
