@@ -1,0 +1,67 @@
+- hosts: db_servers
+  tasks:
+
+    - name: install postgresql-common package (Debian)
+      ansible.builtin.apt:
+        name:
+          - sudo
+          - postgresql-common
+        state: latest
+      when: ansible_distribution == "Debian"
+
+    - name: updating repos (Debian)
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_distribution == "Debian"
+
+    - name: initiate apt postgresql repo (Debian)
+      ansible.builtin.shell:
+        cmd: /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
+      when: ansible_distribution == "Debian"
+
+    - name: install postgresql-17 package (Debian)
+      ansible.builtin.apt:
+        name:
+          - postgresql-17
+        state: latest
+      when: ansible_distribution == "Debian"
+
+    - name: install postgresql repo (AlmaLinux)
+      ansible.builtin.dnf:
+        name:
+          - sudo
+          - 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm'
+        state: latest
+        disable_gpg_check: true
+      when: ansible_distribution == "AlmaLinux"
+
+    - name: updating repos (AlmaLinux)
+      ansible.builtin.dnf:
+        update_cache: yes
+      when: ansible_distribution == "AlmaLinux"
+
+    - name: install postgresql (AlmaLinux)
+      ansible.builtin.dnf:
+        name:
+          - postgresql17
+          - postgresql17-server
+          - postgresql17-contrib
+        state: latest
+      when: ansible_distribution == "AlmaLinux"
+
+    - name: run post-install postgresql tweaks
+      ansible.builtin.script:
+        cmd: "{{ script_var }} {{ second_host }}"
+      register: results
+
+    - name: post-install script output
+      ansible.builtin.debug:
+        var: results.stdout
+
+
+- hosts: all
+  tasks:
+
+    - name: create student user for all hosts
+      ansible.builtin.user:
+        name: student

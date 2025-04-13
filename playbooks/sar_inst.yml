@@ -1,0 +1,21 @@
+---
+
+- hosts: all
+  tasks:
+
+  - name: install updates (AlmaLinux)
+    ansible.builtin.dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: install updates (Debian)
+    ansible.builtin.apt:
+      upgrade: safe
+      update_cache: yes
+    when: ansible_distribution == "Debian"
+
+  - name: install sysstat
+    ansible.builtin.package:
+      name: sysstat
+      state: latest
