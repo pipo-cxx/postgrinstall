@@ -44,7 +44,7 @@ def install_postgres(other_host):
 
     if pattern.match(other_host):
         print("Provided IP address, adding mask...")
-        other_host + "/32"
+        other_host = other_host + "/32"
 
     out, err, rc = ansible_runner.run_command(
         host_cwd=work_dir,

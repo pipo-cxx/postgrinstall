@@ -19,12 +19,14 @@ else
     echo "*:*:*:postgres:12345678" > /var/lib/postgresql/.pgpass
     chmod 600 /var/lib/postgresql/.pgpass
     chown postgres:postgres /var/lib/postgresql/.pgpass
+    echo "Starting cluster..."
+    pg_ctlcluster 17 main start
 fi
 
 echo "Creating database and user..."
-sudo -u postgres psql -U postgres -c "ALTER ROLE postgres WITH PASSWORD '12345678'"
-sudo -u postgres psql -h localhost -U postgres -c "CREATE USER student LOGIN CREATEDB PASSWORD '12345678'"
-sudo -u postgres psql -h localhost -U postgres -c "CREATE DATABASE data OWNER student"
+sudo -u postgres psql -U postgres -c "ALTER ROLE postgres WITH PASSWORD '12345678';"
+sudo -u postgres psql -h localhost -U postgres -c "CREATE USER student LOGIN CREATEDB PASSWORD '12345678';"
+sudo -u postgres psql -h localhost -U postgres -c "CREATE DATABASE data OWNER student;"
 
 echo "Restricting user student to only connect from second ip..."
 
@@ -57,18 +59,20 @@ fi
 
 if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
 then
-    echo "Restarting PostgreSQL..."
-    if systemctl restart postgresql-17
+    echo "Reloading PostgreSQL..."
+    if systemctl reload postgresql-17
     then
-        sudo -u postgres psql -h localhost -U postgres -d data -c 'SELECT 1;'
+        sudo -u postgres psql -h localhost -d data -c 'SELECT 1;'
     else
         echo "Could not restart PostgreSQL"
     fi
 else
-    echo "Restarting PostgreSQL..."
-    if systemctl restart postgresql
+    echo "Reloading PostgreSQL..."
+    if systemctl reload postgresql
     then
-        sudo -u postgres psql -h localhost -U postgres -d data -c 'SELECT 1;'
+        echo "Restarting cluster..."
+        pg_ctlcluster 17 main restart
+        sudo -u postgres psql -h localhost -d data -c 'SELECT 1;'
     else
         echo "Could not restart PostgreSQL"
     fi
