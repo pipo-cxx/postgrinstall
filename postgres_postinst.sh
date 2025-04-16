@@ -55,6 +55,7 @@ else
     echo "Allowing connections from any ip..."
     sed -i "61i listen_addresses = '*'\n" /etc/postgresql/17/main/postgresql.conf
     printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /etc/postgresql/17/main/pg_hba.conf
+    chmod 644 /etc/postgresql/17/main/pg_hba.conf
 fi
 
 if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
@@ -72,7 +73,7 @@ else
     then
         echo "Restarting cluster..."
         pg_ctlcluster 17 main restart
-        sudo -u postgres psql -h localhost -d data -c 'SELECT 1;'
+        sudo -u postgres sh -c "echo SELECT 1\; | psql -h localhost -d data"
     else
         echo "Could not restart PostgreSQL"
     fi
