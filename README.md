@@ -26,7 +26,9 @@ sudo chmod +x postgrinstall.sh
 ```
 
 6. Запустите файл:
-```./postgrinstall.sh <ip-address1>,<ip-address2>```
+```
+./postgrinstall.sh <ip-address1>,<ip-address2>
+```
 Вместо `<ip-address1>,<ip-address2>` напишите необходимые вам ip-адреса или доменные имена машин. Например:
 ```
 ./postgrinstall.sh 172.16.0.10,172.16.0.12
@@ -35,9 +37,8 @@ sudo chmod +x postgrinstall.sh
 ```
 ./postgrinstall.sh deb.pipohomelab.com,alma.pipohomelab.com
 ```
-
+<br>
 Для примера выполнения команды без ошибок можете просмотреть папку `screenshots` в данном репозитории, храняющую в себе скриншоты с образацми запуска программы.
-
 <br>
 
 ## Возникшие трудности
