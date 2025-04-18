@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-echo "Creating Python virtual environment..."
-python3 -m venv .env
+if [ ! -d ".env" ]
+then
+    echo "Creating Python virtual environment..."
+    python3 -m venv .env
+fi
 
 echo "Installing requirements..."
 .env/bin/pip install -r requirements.txt

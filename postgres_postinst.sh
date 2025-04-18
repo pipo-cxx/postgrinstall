@@ -42,7 +42,9 @@ then
 
     echo "Allowing connections from any ip..."
     sed -i "61i listen_addresses = '*'\n" /var/lib/pgsql/17/data/postgresql.conf
-    printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /var/lib/pgsql/17/data/pg_hba.conf
+#    printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /var/lib/pgsql/17/data/pg_hba.conf
+    firewall-cmd --permanent --zone="$(firewall-cmd --get-active-zones | sed -n '1p')" --add-port=5432/tcp
+    firewall-cmd --reload
 
 else
     echo "Creating backups of default files..."
@@ -54,14 +56,14 @@ else
 
     echo "Allowing connections from any ip..."
     sed -i "61i listen_addresses = '*'\n" /etc/postgresql/17/main/postgresql.conf
-    printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /etc/postgresql/17/main/pg_hba.conf
+#    printf "host\t\tall\tall\t\t0.0.0.0/0\t\ttrust\n" >> /etc/postgresql/17/main/pg_hba.conf
     chmod 644 /etc/postgresql/17/main/pg_hba.conf
 fi
 
 if [[ $distro  == *"AlmaLinux"* || $distro == *"CentOS"* ]]
 then
-    echo "Reloading PostgreSQL..."
-    if systemctl reload postgresql-17
+    echo "Restarting PostgreSQL..."
+    if systemctl restart postgresql-17
     then
         sudo -u postgres psql -h localhost -d data -c 'SELECT 1;'
     else
