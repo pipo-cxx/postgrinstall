@@ -14,14 +14,16 @@
 ## Запуск
 
 1. Клонируйте репозиторий командой:
-```git clone https://github.com/pipo-cxx/postgrinstall.git```
+```
+git clone https://github.com/pipo-cxx/postgrinstall.git
+```
 
-2. Перейдите в папку с клонированным репозиторием.
+3. Перейдите в папку с клонированным репозиторием.
 
-3. Сделайте файл `postgrinstall.sh` исполняемым с помощью:
+4. Сделайте файл `postgrinstall.sh` исполняемым с помощью:
 ```sudo chmod +x postgrinstall.sh```
 
-4. Запустите файл:
+5. Запустите файл:
 ```./postgrinstall.sh <ip-address1>,<ip-address2>```
 Вместо `<ip-address1>,<ip-address2>` напишите необходимые вам ip-адреса или доменные имена машин. Например:
 ```
